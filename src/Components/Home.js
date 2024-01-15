@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 
 import { Link } from "react-router-dom";
-//import books from "../datastore.json"
+//Home page
 function MyBanner(){
   return (
     <div className="banner">        
