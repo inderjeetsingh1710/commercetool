@@ -4,15 +4,15 @@ import Home from './Components/Home';
 import Login from './Components/Login';
 import Navbar from './Components/Common/Navbar';
 import Routers from './Routers';
-
+// ash
 function App() {
 
   return (
     <>
-   
-    <Routers />
- 
-    
+
+      <Routers />
+
+
     </>
   );
 }
