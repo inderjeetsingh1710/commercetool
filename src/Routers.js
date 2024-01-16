@@ -14,6 +14,8 @@ import Home from './Components/Home';
 import Login from './Components/Login';
 import Signup from './Components/Signup';
 import CategoryDetail from './Components/CategoryDetail';
+import ProductDetail from './Components/ProductDetail';
+import ErrorPage from './Components/ErrorPage';
 
 function Routers() {
   let { userId } = useParams();
@@ -21,19 +23,19 @@ function Routers() {
   Token();
   
   return (
-    <>
-        <Router> 
+        <Router>
         <Navbar/>
           <Routes>
-            <Route exact path="/" element={<Home />} /> 
-            <Route exact path="/home" element={<Home />} /> 
-            <Route exact path="/signup" element={<Signup />} /> 
-            <Route exact path="/login" element={<Login />} />             
-            <Route exact path="/category/:paramId" element={<CategoryDetail />} />             
+            <Route exact path="/" element={<Home />} />
+            <Route exact path="/home" element={<Home />} />
+            <Route exact path="/signup" element={<Signup />} />
+            <Route exact path="/login" element={<Login />} />
+            <Route exact path="/category/:paramId" element={<CategoryDetail />} />
+            <Route path="/product/:id" element={<ProductDetail />} />
+            <Route path="*" element={<ErrorPage />} />
           </Routes>
-          <Footer/>  
+          <Footer/>
         </Router>
-        </>
   )
 }
 
