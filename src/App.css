@@ -11,13 +11,13 @@
   justify-content: center;
 }
 .bluedivider{
-  background: #233f92;
+  background: #488244;
   height: 36px;
 }
 .quick-info ul li {
   list-style: none;
 }
-.quick-info ul{
+.quick-info ul {
   float: left;
   width: 100%;
   padding: 0;
@@ -46,7 +46,7 @@
   margin-right: 8px;
 }
 .quick-info li a {
-  color: #233f92;
+  color: #333;
   font-weight: 500;
 }
 .login-page form {
@@ -55,9 +55,14 @@
   min-width: 450px;
 }
 .footer {
-  background-color: #041F6A;
+  background-color: #488244;
   padding: 40px 0 30px;  
 }
+.btn-success {  
+  background-color: #488244;
+  border-color: #488244;
+}
+.price-container{font-weight: 600;font-size: 18px;text-align: right;padding-bottom: 8px;}
 .footer h3 {  
   margin: 0 0 21px;
   font-size: 17px;
@@ -78,21 +83,16 @@ ul li {
   list-style: none;
 }
 .footer ul li a {  
-  color: #919fc9;
+  color: #fff;
   font-size: 13px;
   line-height: 15px;
 }
 
-.latest-product-offers h2 {
-  float: left;
-  position: relative;
-  width: 100%;
-  text-align: center;
-  line-height: 18px;
-  margin: 0;
+.latest-product-offers h2 {  
+  text-align: center;  
   font-weight: 600;
 }
-.latest-product-offers h2:before {
+.latest-product-offers11 h2:before {
   content: "";
   display: block;
   border-top: 1px solid #d8d8d8;
@@ -102,7 +102,15 @@ ul li {
   top: 50%;
   z-index: 9;
 }
-.latest-product-offers h2 span {
+.style-div{
+  margin-top: 12px;
+  width: 12%;
+  margin: 0 auto;
+  height: 3px !important;
+  opacity: 1;
+  background-color: green;
+}
+.latest-product-offers11 h2 span {
   color: #2c2c2c;
   font-size: 26px;  
   background: #fff;
@@ -111,6 +119,7 @@ ul li {
   position: relative;
   padding: 0 10px;
 }
+.categories-list h2,.product-list h2{text-align: center;}
 
 .login-page form h3 {
   text-align: center;
@@ -162,7 +171,8 @@ ul li {
 }
 
 #category-page{padding: 30px 0px ;}
-
+.btn-container{text-align: right;}
+.cart-btn{color: #fff !important;}
 
 
 .create-account {

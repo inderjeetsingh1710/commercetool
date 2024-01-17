@@ -26,25 +26,31 @@ function Token() {
       let get_token_date = localStorage.getItem('get_ecomm_token_date');
       let todayDate = getDate();
       console.log('API token: '+token);      
-      console.log('API today: '+get_token_date);
-      if(get_token_date != todayDate || token != ''){   
-        console.log('API Call for Token');     
-        axios.request({
-          url: 'https://auth.eu-central-1.aws.commercetools.com/oauth/token?grant_type=client_credentials',
-          method:'post',
-          headers: headres,
-          data: postData
-        }).then(function(response){
-            let responseData = JSON.parse(JSON.stringify(response)); 
-            console.log('responseData1: '+responseData.data.access_token);  
-            localStorage.setItem('ecomm_token', responseData.data.access_token);
-            localStorage.setItem('get_ecomm_token_date', getDate());  
-            let token = localStorage.getItem('token'); 
-        });
-      }      
+      console.log('API today: '+get_token_date);  
+      
+      const fetchToken = async () => {      
+        if(get_token_date != todayDate || token != ''){   
+          console.log('API Call for Token');     
+          await axios.request({
+            url: 'https://auth.eu-central-1.aws.commercetools.com/oauth/token?grant_type=client_credentials',
+            method:'post',
+            headers: headres,
+            data: postData
+          }).then(function(response){
+              let responseData = JSON.parse(JSON.stringify(response)); 
+              console.log('responseData1: '+responseData.data.access_token);  
+              localStorage.setItem('ecomm_token', responseData.data.access_token);
+              localStorage.setItem('get_ecomm_token_date', getDate());  
+              //let token = localStorage.getItem('token'); 
+          });
+        }    
+      };
+      fetchToken(); 
+
     }
     catch (e) {
       console.log(e)
-    }     
+    }  
+     
 }
 export default Token
