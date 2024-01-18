@@ -81,22 +81,21 @@ function FeaturedProduct(){
       <h2><span>Featured Products</span></h2>
       <hr className="style-div" />
       <div className="row">
-      { (myProductList.length > 0) ? myProductList.map((list,index) => <div className="col-md-3" key="data">
-                <Link to={`/product/${list.id}`}>
-                    <div className="inner-product"> 
-                        <div className="pro-img">
-                            <img src={list.masterData.current.variants[0].images[0].url} alt={list.masterData.current.name.en} />
-                        </div>                  
-                        <div className="inner-cat-info">                           
-                            <h1>{list.masterData.current.name.en}</h1>
-                             {/* { list.masterData.current.masterVariant.prices.map(prices => <p>{prices.value.centAmount}</p>) }                            */}
-                             <div className="price-container">{(list.masterData.current.masterVariant.prices[0].value.centAmount / 100).toLocaleString("en-US", {style:"currency", currency:"GBP"})}</div>
-                             <div className="btn-container"><a href="javascript:void(0)" className="addToCart cart-btn btn btn-success" data-id={list.id}><i class="bi bi-bag"></i> Add to Cart</a></div>
-                        </div>
+      { (myProductList.length > 0) ? myProductList.map((list,index) => <div className="col-md-3" key="data">                
+                <div className="inner-product"> 
+                    <div className="pro-img">
+                    <Link to={`/product/${list.id}`}><img src={list.masterData.current.variants[0].images[0].url} alt={list.masterData.current.name.en} /></Link>
+                    </div>                  
+                    <div className="inner-cat-info">                           
+                    <Link to={`/product/${list.id}`}><h1>{list.masterData.current.name.en}</h1></Link>
+                          {/* { list.masterData.current.masterVariant.prices.map(prices => <p>{prices.value.centAmount}</p>) }                            */}
+                          <div className="price-container">{(list.masterData.current.masterVariant.prices[0].value.centAmount / 100).toLocaleString("en-US", {style:"currency", currency:"GBP"})}</div>
+                          <div className="btn-container"><a href="javascript:void(0)" className="addToCart cart-btn btn btn-success" data-id={list.id}><i class="bi bi-bag"></i> Add to Cart</a></div>
                     </div>
-                </Link>
                 </div>
-                ) : <div className='col-md-12'><p>No Product Found</p></div> }
+            
+            </div>
+          ) : <div className='col-md-12'><p>No Product Found</p></div> }
       </div>
     </div>
 
