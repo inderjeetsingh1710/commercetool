@@ -48,9 +48,9 @@ function FeaturedProduct(){
     'Authorization': 'Bearer '+token,
     'Content-Type': 'application/json'      
     };
-    
+    const apiUrl = process.env.REACT_APP_ECOMM_API_URL+'/'+process.env.REACT_APP_ECOMM_PROJ_NAME+'/products/?where=masterData(current(categories(id%3D%22'+paramId+'%22)))';
     await axios.request({
-        url: 'https://api.eu-central-1.aws.commercetools.com/netsolutionssample/products/?where=masterData(current(categories(id%3D%22'+paramId+'%22)))',
+        url: apiUrl,
         method:'get',
         headers: headers      
     }).then(function(response){
@@ -79,7 +79,7 @@ function FeaturedProduct(){
     <div className="product-list">
     <div className="container">
       <h2><span>Featured Products</span></h2>
-      <hr className="style-div" />
+      <hr className="style-div" />      
       <div className="row">
       { (myProductList.length > 0) ? myProductList.map((list,index) => <div className="col-md-3" key="data">                
                 <div className="inner-product"> 
@@ -136,8 +136,9 @@ function Home() {
       'Authorization': 'Bearer '+token,
       'Content-Type': 'application/json'      
     };
+    const apiUrl = process.env.REACT_APP_ECOMM_API_URL+'/'+process.env.REACT_APP_ECOMM_PROJ_NAME+'/categories?limit=4';
     await axios.request({
-      url: 'https://api.eu-central-1.aws.commercetools.com/netsolutionssample/categories?limit=4',
+      url: apiUrl,
       method:'get',
       headers: headers      
     }).then(function(response){
