@@ -214,7 +214,7 @@ ul.navbar-nav.me-auto.mb-2.mb-lg-0 {
   color: #000;
   text-decoration: none;
 }
-.header ul li:last-child a {
+/*.header ul li:last-child a {
   background: #fd8b37;
   color: #fff;
   padding: 10px 20px;
@@ -232,7 +232,7 @@ ul.navbar-nav.me-auto.mb-2.mb-lg-0 {
   background: linear-gradient(to bottom, #ff8832 0%,#ffca89 100%);
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ff8832', endColorstr='#ffca89',GradientType=0 );
   transition: 0.5s;
-}
+}*/
 .header ul li:last-child:hover a::before
 {
   width: 100%;
@@ -312,3 +312,7 @@ ul.navbar-nav.me-auto.mb-2.mb-lg-0 {
 .inner-list h5 {
   font-size: 19px;
 }
+.header-cart {
+  padding-left: 30px;
+}
+.header-cart a{color: #488244;font-size: 30px;}
