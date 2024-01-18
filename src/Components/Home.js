@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 
 import { Link } from "react-router-dom";
-//Home page
+//import books from "../datastore.json"
 function MyBanner(){
   return (
     <div className="banner">        
@@ -37,6 +37,72 @@ function MyBanner(){
     
   );
 }
+const sleep = ms =>  new Promise(resolve => setTimeout(resolve, ms));
+
+function FeaturedProduct(){
+  const [myProductList, setList] = useState([]);
+  const fetchProducts = async () => {
+    let token = localStorage.getItem('ecomm_token');   
+    let paramId = 'c7cc7bb6-5de4-4100-8b78-a0f69776dbb3';
+    const headers = {
+    'Authorization': 'Bearer '+token,
+    'Content-Type': 'application/json'      
+    };
+    
+    await axios.request({
+        url: 'https://api.eu-central-1.aws.commercetools.com/netsolutionssample/products/?where=masterData(current(categories(id%3D%22'+paramId+'%22)))',
+        method:'get',
+        headers: headers      
+    }).then(function(response){
+        let categories = JSON.parse(JSON.stringify(response));             
+        //console.log('Categories: '+categories.data.results[0].id);
+        //return false;          
+        setList(categories.data.results);            
+    });
+
+  };
+
+  useEffect(() => {
+    let token = localStorage.getItem('ecomm_token');
+    console.log('FeaturedProduct: '+token);
+    if(token == '' || token == null ){
+      sleep(1000).then(() => {
+        console.log('Going into Sleep 2');
+        fetchProducts();
+      });
+    }else{
+      fetchProducts();
+    } 
+    
+  }, []);
+  return(
+    <div className="product-list">
+    <div className="container">
+      <h2><span>Featured Products</span></h2>
+      <hr className="style-div" />
+      <div className="row">
+      { (myProductList.length > 0) ? myProductList.map((list,index) => <div className="col-md-3" key="data">
+                <Link to={`/product/${list.id}`}>
+                    <div className="inner-product"> 
+                        <div className="pro-img">
+                            <img src={list.masterData.current.variants[0].images[0].url} alt={list.masterData.current.name.en} />
+                        </div>                  
+                        <div className="inner-cat-info">                           
+                            <h1>{list.masterData.current.name.en}</h1>
+                             {/* { list.masterData.current.masterVariant.prices.map(prices => <p>{prices.value.centAmount}</p>) }                            */}
+                             <div className="price-container">{(list.masterData.current.masterVariant.prices[0].value.centAmount / 100).toLocaleString("en-US", {style:"currency", currency:"GBP"})}</div>
+                             <div className="btn-container"><a href="javascript:void(0)" className="addToCart cart-btn btn btn-success" data-id={list.id}><i class="bi bi-bag"></i> Add to Cart</a></div>
+                        </div>
+                    </div>
+                </Link>
+                </div>
+                ) : <div className='col-md-12'><p>No Product Found</p></div> }
+      </div>
+    </div>
+
+  </div>
+  );
+}
 function Home() {
   //Categories Image
   const catImages = [
@@ -48,28 +114,29 @@ function Home() {
   // Products
   const [mylist, setList] = useState([]);
   const [myCatlist, setList1] = useState([]);
-
-  const fetchProducts = async () => {
-    const response = await axios.get("https://fakestoreapi.com/products");
-    console.log(response.data);
-    setList(response.data);
-  };
-  useEffect(() => {
-    //fetchProducts();
-    fetchCategories();
+ 
+  useEffect(() => {    
+    let token = localStorage.getItem('ecomm_token');
+    console.log('fetchCategories token: '+token);
+    if(token == '' || token == null){
+      sleep(1000).then(() => {
+        console.log('Going into Sleep 1');
+        fetchCategories();
+      });
+    }else{
+      fetchCategories();
+    }
   }, []);
 
   // Categories
   // https://api.eu-central-1.aws.commercetools.com/netsolutionssample/categories
 
   const fetchCategories = async () => {
-
-    let token = localStorage.getItem('ecomm_token');
+    let token = localStorage.getItem('ecomm_token');     
     const headers = {
       'Authorization': 'Bearer '+token,
       'Content-Type': 'application/json'      
     };
-
     await axios.request({
       url: 'https://api.eu-central-1.aws.commercetools.com/netsolutionssample/categories?limit=4',
       method:'get',
@@ -90,8 +157,10 @@ function Home() {
     <><MyBanner />
       <div className="categories-list">
         <div className="container">
+          <h2><span>Shop by Category</span></h2>
+          <hr className="style-div" />
           <div className="row latest-product-offers home-categories" id="home-categories">          
-            <h2><span>Latest Categories</span></h2>
+            
             {myCatlist.map((list,index) => <div className="col-md-3" key="data">
               <Link to={`/category/${list.id}`}>
                 <div className="inner-product">
@@ -104,13 +173,12 @@ function Home() {
                   </div>
                 </div>
               </Link>
-
             </div>
-
             )}
           </div>
         </div>
-      </div>    
+      </div>
+      <FeaturedProduct />   
     </>
   );
 }
