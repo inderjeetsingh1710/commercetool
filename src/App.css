@@ -316,3 +316,5 @@ ul.navbar-nav.me-auto.mb-2.mb-lg-0 {
   padding-left: 30px;
 }
 .header-cart a{color: #488244;font-size: 30px;}
+.product-title{font-size: 18px;min-height:50px;}
+.page-title{padding-bottom: 15px;}
