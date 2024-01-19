@@ -40,7 +40,7 @@ function MyBanner(){
 const sleep = ms =>  new Promise(resolve => setTimeout(resolve, ms));
 
 function FeaturedProduct(){
-  const [myProductList, setList] = useState([]);
+  const [myProductList, setPList] = useState([]);
   const fetchProducts = async () => {
     let token = localStorage.getItem('ecomm_token');   
     let paramId = 'c7cc7bb6-5de4-4100-8b78-a0f69776dbb3';
@@ -48,7 +48,7 @@ function FeaturedProduct(){
     'Authorization': 'Bearer '+token,
     'Content-Type': 'application/json'      
     };
-    const apiUrl = process.env.REACT_APP_ECOMM_API_URL+'/'+process.env.REACT_APP_ECOMM_PROJ_NAME+'/products/?where=masterData(current(categories(id%3D%22'+paramId+'%22)))';
+    const apiUrl = process.env.REACT_APP_ECOMM_API_URL+'/'+process.env.REACT_APP_ECOMM_PROJ_NAME+'/products/?limit=4&where=masterData(current(categories(id%3D%22'+paramId+'%22)))';
     await axios.request({
         url: apiUrl,
         method:'get',
@@ -57,7 +57,7 @@ function FeaturedProduct(){
         let categories = JSON.parse(JSON.stringify(response));             
         //console.log('Categories: '+categories.data.results[0].id);
         //return false;          
-        setList(categories.data.results);            
+        setPList(categories.data.results);            
     });
 
   };
@@ -81,16 +81,16 @@ function FeaturedProduct(){
       <h2><span>Featured Products</span></h2>
       <hr className="style-div" />      
       <div className="row">
-      { (myProductList.length > 0) ? myProductList.map((list,index) => <div className="col-md-3" key="data">                
+      { (myProductList.length > 0) ? myProductList.map((prolist) => <div className="col-md-3" key={prolist.id}>                
                 <div className="inner-product"> 
                     <div className="pro-img">
-                    <Link to={`/product/${list.id}`}><img src={list.masterData.current.variants[0].images[0].url} alt={list.masterData.current.name.en} /></Link>
+                    <Link to={`/product/${prolist.id}`}><img src={prolist.masterData.current.variants[0].images[0].url} alt={prolist.masterData.current.name.en} /></Link>
                     </div>                  
                     <div className="inner-cat-info">                           
-                    <Link to={`/product/${list.id}`}><h1>{list.masterData.current.name.en}</h1></Link>
+                      <Link to={`/product/${prolist.id}`}><h1>{prolist.masterData.current.name.en}</h1></Link>
                           {/* { list.masterData.current.masterVariant.prices.map(prices => <p>{prices.value.centAmount}</p>) }                            */}
-                          <div className="price-container">{(list.masterData.current.masterVariant.prices[0].value.centAmount / 100).toLocaleString("en-US", {style:"currency", currency:"GBP"})}</div>
-                          <div className="btn-container"><a href="javascript:void(0)" className="addToCart cart-btn btn btn-success" data-id={list.id}><i className="bi bi-bag"></i> Add to Cart</a></div>
+                          <div className="price-container">{(prolist.masterData.current.masterVariant.prices[0].value.centAmount / 100).toLocaleString("en-US", {style:"currency", currency:"GBP"})}</div>
+                          <div className="btn-container"><a href="#" className="addToCart cart-btn btn btn-success" data-id={prolist.id}><i className="bi bi-bag"></i> Add to Cart</a></div>
                     </div>
                 </div>
             
@@ -161,15 +161,15 @@ function Home() {
           <hr className="style-div" />
           <div className="row latest-product-offers home-categories" id="home-categories">          
             
-            {myCatlist.map((list,index) => <div className="col-md-3" key="data">
-              <Link to={`/category/${list.id}`}>
+            {myCatlist.map((catlist,index) => <div className="col-md-3" key={catlist.id}>
+              <Link to={`/category/${catlist.id}`}>
                 <div className="inner-product">
                   <div className="pro-img" style={{ backgroundImage:`url(${'/images/'+catImages[index]})`, backgroundSize: 'cover',backgroundRepeat:'no-repeat'}} >
                     {/* <img src={'/images/'+catImages[index]} alt={index} />                     */}
                   </div>
                   <div className="inner-cat-info">
-                    <h1>{list.name.en}</h1>
-                    <p>{list.description ? (list.description.en ): ('')}</p>
+                    <h1>{catlist.name.en}</h1>
+                    <p>{catlist.description ? (catlist.description.en ): ('')}</p>
                   </div>
                 </div>
               </Link>
