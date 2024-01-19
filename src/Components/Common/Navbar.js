@@ -36,7 +36,7 @@ function Navbar(props) {
               </ul>
               <div className="header-cart">
                 <NavLink to="#" className="user-cart" >
-                  <i class="bi bi-basket-fill"></i>
+                  <i className="bi bi-basket-fill"></i>
                 </NavLink>
               </div>            
             </div>

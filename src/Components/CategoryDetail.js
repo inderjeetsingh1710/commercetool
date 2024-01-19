@@ -77,7 +77,7 @@ function CategoryDetail(props) {
     <>    
     <div className='product-detail' id="category-page">
         <div className='container'>
-            <div class="row cat-info">
+            <div className="row cat-info">
                 <CategoryDetails />
             </div>
             <div className='inner-prodct-detail'>
@@ -97,7 +97,7 @@ function CategoryDetail(props) {
                                     {(list.masterData.current.masterVariant.prices[0].value.centAmount / 100).toLocaleString("en-US", {style:"currency", currency:"GBP"})}
                                 </div>
                                 <div className="btn-container">
-                                    <a href="javascript:void(0)" className="addToCart cart-btn btn btn-success" data-id={list.id}><i class="bi bi-bag"></i> Add to Cart</a>
+                                    <a href="javascript:void(0)" className="addToCart cart-btn btn btn-success" data-id={list.id}><i className="bi bi-bag"></i> Add to Cart</a>
                                 </div>                            
                             </div>
                         </div>                

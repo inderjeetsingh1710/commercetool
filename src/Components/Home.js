@@ -90,7 +90,7 @@ function FeaturedProduct(){
                     <Link to={`/product/${list.id}`}><h1>{list.masterData.current.name.en}</h1></Link>
                           {/* { list.masterData.current.masterVariant.prices.map(prices => <p>{prices.value.centAmount}</p>) }                            */}
                           <div className="price-container">{(list.masterData.current.masterVariant.prices[0].value.centAmount / 100).toLocaleString("en-US", {style:"currency", currency:"GBP"})}</div>
-                          <div className="btn-container"><a href="javascript:void(0)" className="addToCart cart-btn btn btn-success" data-id={list.id}><i class="bi bi-bag"></i> Add to Cart</a></div>
+                          <div className="btn-container"><a href="javascript:void(0)" className="addToCart cart-btn btn btn-success" data-id={list.id}><i className="bi bi-bag"></i> Add to Cart</a></div>
                     </div>
                 </div>
             
