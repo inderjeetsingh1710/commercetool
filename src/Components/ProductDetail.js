@@ -6,7 +6,7 @@ function ProductDetail() {
 const [product, setProduct] = useState({});
 const {id} = useParams();
 useEffect(()=>{
-  axios.get(process.env.REACT_APP_API_HOST_URL + "/" + process.env.REACT_APP_API_PROJECT_KEY + "/products/" + id, { headers: {"Authorization" : `Bearer ${localStorage.getItem('ecomm_token')}`}
+  axios.get(process.env.REACT_APP_ECOMM_API_URL + "/" + process.env.REACT_APP_ECOMM_PROJ_NAME + "/products/" + id, { headers: {"Authorization" : `Bearer ${localStorage.getItem('ecomm_token')}`}
 }).
   then(response => { setProduct(response.data) }).
   catch(error => { console.error(error) }); 

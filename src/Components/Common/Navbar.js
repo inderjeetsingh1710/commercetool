@@ -33,7 +33,12 @@ function Navbar(props) {
                       <Link to="login"><span>Log out</span></Link>
                 </li>)
                 }
-              </ul>            
+              </ul>
+              <div className="header-cart">
+                <NavLink to="#" className="user-cart" >
+                  <i className="bi bi-basket-fill"></i>
+                </NavLink>
+              </div>            
             </div>
           </div>
         </nav>
