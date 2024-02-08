@@ -1,8 +1,11 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-
 import { Link } from "react-router-dom";
-//import books from "../datastore.json"
+import axios from "axios";
+import { CartContext } from '../context/cart.js'
+import React, { useEffect, useState, useContext } from "react";
+
+
+
+
 function MyBanner(){
   return (
     <div className="banner">        
@@ -40,7 +43,9 @@ function MyBanner(){
 const sleep = ms =>  new Promise(resolve => setTimeout(resolve, ms));
 
 function FeaturedProduct(){
+  const { cartItems, addToCart } = useContext(CartContext)
   const [myProductList, setPList] = useState([]);
+  const [myHomeProducts, setHomeProductList] = useState([]);
   const fetchProducts = async () => {
     let token = localStorage.getItem('ecomm_token');   
     let paramId = 'c7cc7bb6-5de4-4100-8b78-a0f69776dbb3';
@@ -54,9 +59,11 @@ function FeaturedProduct(){
         method:'get',
         headers: headers      
     }).then(function(response){
-        let categories = JSON.parse(JSON.stringify(response));             
+        let categories = JSON.parse(JSON.stringify(response));            
         //console.log('Categories: '+categories.data.results[0].id);
-        //return false;          
+        //return false;
+        let tempProduct = {          
+        }       
         setPList(categories.data.results);            
     });
 
@@ -89,8 +96,8 @@ function FeaturedProduct(){
                     <div className="inner-cat-info">                           
                       <Link to={`/product/${prolist.id}`}><h1>{prolist.masterData.current.name.en}</h1></Link>
                           {/* { list.masterData.current.masterVariant.prices.map(prices => <p>{prices.value.centAmount}</p>) }                            */}
-                          <div className="price-container">{(prolist.masterData.current.masterVariant.prices[0].value.centAmount / 100).toLocaleString("en-US", {style:"currency", currency:"GBP"})}</div>
-                          <div className="btn-container"><a href="#" className="addToCart cart-btn btn btn-success" data-id={prolist.id}><i className="bi bi-bag"></i> Add to Cart</a></div>
+                          <div className="price-container">{(prolist.masterData.current.masterVariant.prices[0].value.centAmount / 100).toLocaleString("en-US", {style:"currency", currency:"GBP"})}</div>                          
+                          <div className="btn-container"><a href="#" className="addToCart cart-btn btn btn-success" data-id={prolist.id} onClick={() => addToCart({'id':prolist.id,'title':prolist.masterData.current.name.en,'price':'5.33','thumbnail':prolist.masterData.current.variants[0].images[0].url})}><i className="bi bi-bag"></i> Add to Cart</a></div>
                     </div>
                 </div>
             
