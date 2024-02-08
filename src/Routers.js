@@ -13,8 +13,10 @@ import {
 import Home from './Components/Home';
 import Login from './Components/Login';
 import Signup from './Components/Signup';
+import Shop from './Components/Shop';
 import CategoryDetail from './Components/CategoryDetail';
 import ProductDetail from './Components/ProductDetail';
+import Cart from './Components/Cart';
 import ErrorPage from './Components/ErrorPage';
 
 function Routers() {
@@ -30,6 +32,8 @@ function Routers() {
             <Route exact path="/home" element={<Home />} />
             <Route exact path="/signup" element={<Signup />} />
             <Route exact path="/login" element={<Login />} />
+            <Route exact path="/shop" element={<Shop />} />
+            <Route exact path="/cart" element={<Cart />} />
             <Route exact path="/category/:paramId" element={<CategoryDetail />} />
             <Route path="/product/:id" element={<ProductDetail />} />
             <Route path="*" element={<ErrorPage />} />
