@@ -25,7 +25,8 @@ function CategoryDetails(){
             let categories = JSON.parse(JSON.stringify(response));
             console.log('Categories: ' + categories.data.name.en);
             setName(categories.data.name.en);
-            setDesc(categories.data.description.en);
+            (categories.data?.description?.en) ? setDesc(categories.data.description.en) : setDesc('');
+            //setDesc(categories.data.description.en);
 
             //return false;          
         });
@@ -75,7 +76,7 @@ function CategoryDetail(props) {
       }, []);
   return (
     <>    
-    <div className='product-detail' id="category-page">
+    <div className='product-detail-1' id="category-page">
         <div className='container'>
             <div className="row cat-info">
                 <CategoryDetails />
