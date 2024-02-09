@@ -46,6 +46,9 @@ function FeaturedProduct(){
   const { cartItems, addToCart } = useContext(CartContext)
   const [myProductList, setPList] = useState([]);
   const [myHomeProducts, setHomeProductList] = useState([]);
+  const currency = process.env.REACT_APP_CURRENCY;
+  const currencySymbol = process.env.REACT_APP_CURRENCY_SYMBOL;
+
   const fetchProducts = async () => {
     let token = localStorage.getItem('ecomm_token');   
     let paramId = 'c7cc7bb6-5de4-4100-8b78-a0f69776dbb3';
@@ -73,7 +76,7 @@ function FeaturedProduct(){
     let token = localStorage.getItem('ecomm_token');
     console.log('FeaturedProduct: '+token);
     if(token == '' || token == null ){
-      sleep(1000).then(() => {
+      sleep(2000).then(() => {
         console.log('Going into Sleep 2');
         fetchProducts();
       });
@@ -96,8 +99,8 @@ function FeaturedProduct(){
                     <div className="inner-cat-info">                           
                       <Link to={`/product/${prolist.id}`}><h1>{prolist.masterData.current.name.en}</h1></Link>
                           {/* { list.masterData.current.masterVariant.prices.map(prices => <p>{prices.value.centAmount}</p>) }                            */}
-                          <div className="price-container">{(prolist.masterData.current.masterVariant.prices[0].value.centAmount / 100).toLocaleString("en-US", {style:"currency", currency:"GBP"})}</div>                          
-                          <div className="btn-container"><a href="#" className="addToCart cart-btn btn btn-success" data-id={prolist.id} onClick={() => addToCart({'id':prolist.id,'title':prolist.masterData.current.name.en,'price':'5.33','thumbnail':prolist.masterData.current.variants[0].images[0].url})}><i className="bi bi-bag"></i> Add to Cart</a></div>
+                          <div className="price-container">{(prolist.masterData.current.masterVariant.prices[0].value.centAmount / 100).toLocaleString("en-US", {style:"currency", currency:currency})}</div>                          
+                          <div className="btn-container"><a href="#" className="addToCart cart-btn btn btn-success" data-id={prolist.id} onClick={() => addToCart({'id':prolist.id,'title':prolist.masterData.current.name.en,'price': (prolist.masterData.current.masterVariant.prices[0].value.centAmount / 100).toFixed(2) ,'thumbnail':prolist.masterData.current.variants[0].images[0].url})}><i className="bi bi-bag"></i> Add to Cart</a></div>
                     </div>
                 </div>
             
@@ -125,7 +128,7 @@ function Home() {
     let token = localStorage.getItem('ecomm_token');
     console.log('fetchCategories token: '+token);
     if(token == '' || token == null){
-      sleep(1000).then(() => {
+      sleep(2000).then(() => {
         console.log('Going into Sleep 1');
         fetchCategories();
       });

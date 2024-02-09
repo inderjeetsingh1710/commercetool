@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import { CartContext } from '../context/cart.js'
+import React, { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import { useParams } from 'react-router-dom';
 import { Link } from "react-router-dom";
+
 
 
 function CategoryDetails(){    
@@ -45,8 +47,11 @@ function CategoryDetails(){
 
 function CategoryDetail(props) {
     let { paramId } = useParams();
+    const { cartItems, addToCart } = useContext(CartContext)
     const [prodetails, setCatdetails] = useState([]);
     const [myProductList, setList] = useState([]);
+    const currency = process.env.REACT_APP_CURRENCY;
+    const currencySymbol = process.env.REACT_APP_CURRENCY_SYMBOL;
      
 
     const catdetail = async () => {
@@ -95,10 +100,10 @@ function CategoryDetail(props) {
                                 <Link to={`/product/${list.id}`}><h2 className='product-title'>{list.masterData.current.name.en}</h2></Link>
                                 {/* { list.masterData.current.masterVariant.prices.map(prices => <p>{prices.value.centAmount}</p>) } */}                           
                                 <div className="price-container">
-                                    {(list.masterData.current.masterVariant.prices[0].value.centAmount / 100).toLocaleString("en-US", {style:"currency", currency:"GBP"})}
+                                    {(list.masterData.current.masterVariant.prices[0].value.centAmount / 100).toLocaleString("en-US", {style:"currency", currency:currency})}
                                 </div>
                                 <div className="btn-container">
-                                    <a href="javascript:void(0)" className="addToCart cart-btn btn btn-success" data-id={list.id}><i className="bi bi-bag"></i> Add to Cart</a>
+                                    <a href="#" type="button" className="addToCart cart-btn btn btn-success" data-id={list.id} onClick={() => addToCart({'id':list.id,'title':list.masterData.current.name.en,'price': (list.masterData.current.masterVariant.prices[0].value.centAmount / 100).toFixed(2) ,'thumbnail':list.masterData.current.masterVariant.images[0].url})}><i className="bi bi-bag"></i> Add to Cart</a>
                                 </div>                            
                             </div>
                         </div>                

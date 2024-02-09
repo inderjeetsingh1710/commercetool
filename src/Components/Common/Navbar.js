@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState,useContext } from 'react'
 import { Link, NavLink } from 'react-router-dom'
 import Login from '../Login';
+import { CartContext } from '../../context/cart'
 
 
 function Navbar(props) {
   const [isLogged, setisLogged] = useState(false);
+  const { cartItems } = useContext(CartContext)
 
   useEffect(() => {    
     return () => {};
@@ -35,8 +37,9 @@ function Navbar(props) {
                 }
               </ul>
               <div className="header-cart">
-                <NavLink to="#" className="user-cart" >
-                  <i className="bi bi-basket-fill"></i>
+                <NavLink to="cart" className="user-cart" >
+                    <i className="bi bi-basket-fill"></i>
+                    <span className='basketCounter'>{cartItems.length}</span>
                 </NavLink>
               </div>            
             </div>

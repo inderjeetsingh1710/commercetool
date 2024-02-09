@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import { CartContext } from '../context/cart.js'
+import React, { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import { useParams } from 'react-router-dom';
 import { Link } from "react-router-dom";
 
 const sleep = ms =>  new Promise(resolve => setTimeout(resolve, ms));
 function ShopProduct(){
-    //const { cartItems, addToCart } = useContext(CartContext)
+    const { cartItems, addToCart } = useContext(CartContext)
     const [myProductList, setPList] = useState([]);    
     const fetchProducts = async () => {
       let token = localStorage.getItem('ecomm_token');      
@@ -47,9 +48,10 @@ function ShopProduct(){
                         </div>                  
                         <div className="inner-cat-info">                           
                             <Link to={`/product/${prolist.id}`}><h3 className='prod-title'>{prolist.masterData.current.name.en}</h3></Link>
-                                {/* { list.masterData.current.masterVariant.prices.map(prices => <p>{prices.value.centAmount}</p>) }                            */}
-                                <div className="price-container">{(prolist.masterData.current.masterVariant.prices[0].value.centAmount / 100).toLocaleString("en-US", {style:"currency", currency:"GBP"})}</div>                          
-                                <div className="btn-container"><a href="#" className="addToCart cart-btn btn btn-success" data-id={prolist.id}><i className="bi bi-bag"></i> Add to Cart</a></div>
+                            <div className="price-container">{(prolist.masterData.current.masterVariant.prices[0].value.centAmount / 100).toLocaleString("en-US", {style:"currency", currency:"GBP"})}</div>                          
+                            <div className="btn-container">
+                                <a href="#" className="addToCart cart-btn btn btn-success" data-id={prolist.id} onClick={() => addToCart({'id':prolist.id,'title':prolist.masterData.current.name.en,'price': (prolist.masterData.current.masterVariant.prices[0].value.centAmount / 100).toFixed(2) ,'thumbnail':prolist.masterData.current.masterVariant.images[0].url})} ><i className="bi bi-bag"></i> Add to Cart</a>
+                            </div>
                         </div>
                     </div>
                 

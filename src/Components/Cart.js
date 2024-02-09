@@ -3,7 +3,9 @@ import { CartContext } from '../context/cart'
 
 
 export default function Cart() {
-  const { cartItems, addToCart, removeFromCart, clearCart, getCartTotal } = useContext(CartContext)
+  const { cartItems, addToCart, removeFromCart, clearCart, getCartTotal } = useContext(CartContext);
+  const currency = process.env.REACT_APP_CURRENCY;
+  const currencySymbol = process.env.REACT_APP_CURRENCY_SYMBOL;
   return (
     <>
     <div className="container">
@@ -18,7 +20,7 @@ export default function Cart() {
               <div className="col-md-9" data-id={item.id}>          
                   <div className="prod-info">
                       <h2 className="prod-title">{item.title}</h2>
-                      <p className="prod-price">{item.price}</p>
+                      <p className="prod-price testinder">{currencySymbol+item.price}</p>
                   </div>
               </div>
               <div className="col-md-2 plus-minus-btns">
@@ -37,7 +39,7 @@ export default function Cart() {
                   <button className="proceed-checkout button btn btn-success">Proceed to Checkout</button>
               </div>
               <div class="col-md-6 cart-total">
-                  <h3 className="cart-total-label">Total: ${getCartTotal()}</h3>
+                  <h3 className="cart-total-label">Total: {currencySymbol+getCartTotal().toFixed(2)}</h3>
               </div>  
             </div>
           ) : (
