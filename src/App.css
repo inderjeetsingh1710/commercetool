@@ -367,3 +367,13 @@ ul.navbar-nav.me-auto.mb-2.mb-lg-0 {
   background-color: #488244;
   border-color: #488244;
 }
+.shippingform, .carriages-form {
+  padding: 20px 20px;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  margin-bottom: 20px;
+}
+.shippingform .form-row label{font-weight:bold}
+.form-container .form-title{padding-bottom:20px;}
+.shippingform .form-row{padding-bottom: 20px;}
+.carriage-desc{display: block;font-size: 14px;color: #7c7c7c;}

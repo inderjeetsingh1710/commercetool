@@ -33,7 +33,7 @@ function Routers() {
             <Route exact path="/signup" element={<Signup />} />
             <Route exact path="/login" element={<Login />} />
             <Route exact path="/shop" element={<Shop />} />
-            <Route exact path="/cart" element={<Cart />} />
+            <Route exact path="/cart" element={<Cart />} />           
             <Route exact path="/category/:paramId" element={<CategoryDetail />} />
             <Route path="/product/:id" element={<ProductDetail />} />
             <Route path="*" element={<ErrorPage />} />

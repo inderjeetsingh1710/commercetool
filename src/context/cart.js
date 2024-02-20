@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 export const CartContext = createContext()
 
 export const CartProvider = ({ children }) => {
+  const token = localStorage.getItem('ecomm_token');
   const [cartItems, setCartItems] = useState(localStorage.getItem('cartItems') ? JSON.parse(localStorage.getItem('cartItems')) : []);
   const addToCart = (item) => {
     console.log('addToCart Calling');
@@ -41,6 +42,25 @@ export const CartProvider = ({ children }) => {
 
   const clearCart = () => {
     setCartItems([]);
+    let cartId = localStorage.getItem('ecomm_cart_id');
+    let cartVersion = localStorage.getItem('ecomm_cart_version');
+    console.log('cartId: '+cartId);
+    if(cartId != null){
+        const headers = {
+          'Authorization': 'Bearer '+token,
+          'Content-Type': 'application/json'      
+        };
+        const apiUrl = process.env.REACT_APP_ECOMM_API_URL+'/'+process.env.REACT_APP_ECOMM_PROJ_NAME+'/carts/'+cartId+'?version='+cartVersion; 
+        axios.request({
+          url: apiUrl,
+          method:'DELETE',          
+          headers: headers      
+        }).then(function(response){
+            //let cartData = response.data;
+            localStorage.removeItem("ecomm_cart_id");    
+            localStorage.removeItem("ecomm_cart_version");    
+        }); 
+    }
   };
 
   const getCartTotal = () => {

@@ -74,14 +74,16 @@ export default function Cart() {
         console.log(cartData);
         let cartId = cartData.id;
         let cartVersion = cartData.version;        
-        localStorage.setItem('ecomm_cart_version', cartVersion);       
+        localStorage.setItem('ecomm_cart_version', cartVersion);
+        window.location.replace('/checkout');   
     }).catch(error => {
       console.log(error.response.data.statusCode)
       if(error.response.data.statusCode == 409){
         let cartVersion = error.response.data.errors[0].currentVersion;       
         localStorage.setItem('ecomm_cart_version', cartVersion);
       }
-   });     
+   });
+      
   }
 
   return (
