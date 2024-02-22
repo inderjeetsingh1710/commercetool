@@ -7,15 +7,55 @@ import "./../css/custom.css";
 const currency = process.env.REACT_APP_CURRENCY;
 const currencySymbol = process.env.REACT_APP_CURRENCY_SYMBOL;
 
+function ShippingForm(){
+  return(
+        <div className='form-container'>
+          <h3 className='form-title'>Set Shipping Address</h3> 
+          <form className='shippingform'>      
+            <div className='row form-row'>
+              <div className='col-md-6'>
+                  <label>First Name</label>
+                  <input type="text" value="" name="firstName" className='form-control' />
+              </div>
+              <div className='col-md-6'>
+                  <label>Last Name</label>
+                  <input type="text" value="" name="lastName" className='form-control' />
+              </div>
+            </div>
+            <div className='row form-row'>
+              <div className='col-md-6'>
+                  <label>Country</label>
+                  <select name='country' className='form-control'>
+                    <option value="DE">Germany</option>
+                  </select>
+              </div>
+              <div className='col-md-6'>
+                  <label>Mobile</label>
+                  <input type="text" value="" name="mobile" className='form-control' />
+              </div>
+            </div>         
+            <div className='row form-row'>
+              <div className='col-md-6'>
+                  <label>Email</label>
+                  <input type="text" value="" name="email" className='form-control' />
+              </div>       
+            </div>         
+            <div className='row form-row'>
+              <div className='col-md-6'>
+                  <button type='button' className='btn btn-success'>Set Shipping Address</button>
+              </div>       
+            </div>         
+          </form>
+        </div>
+  );
+}
+
 function Checkout() {
   const { cartItems, addToCart, removeFromCart, clearCart, getCartTotal } = useContext(CartContext);
   const token = localStorage.getItem('ecomm_token');
 
-  function getcarriages() {
-    console.log('sssssssssssssssss');
+  function getcarriages() {    
     let cartId = localStorage.getItem('ecomm_cart_id');
-
-
     const headers = {
       'Authorization': 'Bearer ' + token,
       'Content-Type': 'application/json'
@@ -39,18 +79,11 @@ function Checkout() {
   }
   const carriages = JSON.parse(localStorage.getItem('carriages'));
 
-  function validateForm() {
-
-  }
-  function handleSubmit() {
-    var result = validateForm();
-    // console.log('reached here ');
-  }
+ 
   function Rendercarriages() {
     return (
       <div className='carr'>
         <section class="checkout delivery-option">
-
 
           <div className="header"><strong>Delivery options</strong></div>
           <div class="row">
@@ -69,7 +102,7 @@ function Checkout() {
         </section >
 
         <div className=''>
-          <form>
+          <form >
 
             {(carriages.length > 0) ? carriages.map((list, index) =>
               <div className='row innerrow'>
@@ -88,7 +121,7 @@ function Checkout() {
                 </div>
               </div>
 
-            ) : <div className='col-md-12'><p>No Product Found</p></div>
+            ) : <div className='col-md-12'><p>No carriages Found</p></div>
 
 
 
@@ -102,20 +135,14 @@ function Checkout() {
     );
   }
   getcarriages();
-  // rendercarriages();
-  return (
-    <div>
-      <>
+  //rendercarriages();
+  return (    
         <div className="container">
-          <div className="page-container">
-            <h1 className="page-title">Checkout</h1>
-
-          </div>
+          <div className="page-container"><h1 className="page-title">Checkout</h1></div>
+          <ShippingForm />
           {(carriages != null) ? <Rendercarriages /> : ''}
-
-        </div>
-      </>
-    </div>
+          
+        </div>     
   )
 }
 
