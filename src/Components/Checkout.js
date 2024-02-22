@@ -1,5 +1,4 @@
-import React from 'react'
-import { useContext } from 'react'
+import React, { useEffect, useState, useContext } from "react";
 import { CartContext } from '../context/cart'
 import axios from "axios";
 import "./../css/custom.css";
@@ -7,7 +6,33 @@ import "./../css/custom.css";
 const currency = process.env.REACT_APP_CURRENCY;
 const currencySymbol = process.env.REACT_APP_CURRENCY_SYMBOL;
 
+function ValidateAddressForm(){
+  console.log('Form Validation');
+}
+
 function ShippingForm(){
+
+  const [firstName, setFirstName] = useState('') // useState to store First Name
+  const [lastName, setLastName] = useState('') // useState to store Last Name
+  const [mobile, setMobile] = useState('') // useState to store Mobile Number 
+  const [email, setEmail] = useState('') // useState to store Email address of the user
+
+  function ValidateAddressForm() {
+    // Check if the First Name is an Empty string or not.
+    if (firstName.length == 0) {
+      alert('Invalid Form, First Name can not be empty')
+      return
+    }
+
+    // Check if the Email is an Empty string or not.
+    if (email.length == 0) {
+      alert('Invalid Form, Email Address can not be empty')
+      return
+    }
+    
+    alert('Form is valid')
+  }
+
   return(
         <div className='form-container'>
           <h3 className='form-title'>Set Shipping Address</h3> 
@@ -15,11 +40,11 @@ function ShippingForm(){
             <div className='row form-row'>
               <div className='col-md-6'>
                   <label>First Name</label>
-                  <input type="text" value="" name="firstName" className='form-control' />
+                  <input type="text" name="firstName" id="firstName" className='form-control'  onChange={(e) => setFirstName(e.target.value)} />
               </div>
               <div className='col-md-6'>
                   <label>Last Name</label>
-                  <input type="text" value="" name="lastName" className='form-control' />
+                  <input type="text" name="lastName" id="lastName" className='form-control' onChange={(e) => setLastName(e.target.value)} />
               </div>
             </div>
             <div className='row form-row'>
@@ -31,18 +56,18 @@ function ShippingForm(){
               </div>
               <div className='col-md-6'>
                   <label>Mobile</label>
-                  <input type="text" value="" name="mobile" className='form-control' />
+                  <input type="text" name="mobile" className='form-control' onChange={(e) => setMobile(e.target.value)} />
               </div>
             </div>         
             <div className='row form-row'>
               <div className='col-md-6'>
                   <label>Email</label>
-                  <input type="text" value="" name="email" className='form-control' />
+                  <input type="text" name="email" className='form-control' onChange={(e) => setEmail(e.target.value)} />
               </div>       
             </div>         
             <div className='row form-row'>
               <div className='col-md-6'>
-                  <button type='button' className='btn btn-success'>Set Shipping Address</button>
+                  <button type='button' className='btn btn-success' onClick = {() => { ValidateAddressForm() }}>Set Shipping Address</button>
               </div>       
             </div>         
           </form>
@@ -83,18 +108,18 @@ function Checkout() {
   function Rendercarriages() {
     return (
       <div className='carr'>
-        <section class="checkout delivery-option">
+        <section className="checkout delivery-option">
 
           <div className="header"><strong>Delivery options</strong></div>
-          <div class="row">
+          <div className="row">
 
-            <div class="col-sm-6 subcloumn">
+            <div className="col-sm-6 subcloumn">
               <span style={{ margin: '20px' }}>Please select a delivery option</span>
             </div>
-            <div class="col-sm-4 subcloumn">
+            <div className="col-sm-4 subcloumn">
               <span>Carrier</span>
             </div>
-            <div class="col-sm-2 subcloumn">
+            <div className="col-sm-2 subcloumn">
               <span>Price</span>
             </div>
           </div>
@@ -107,7 +132,7 @@ function Checkout() {
             {(carriages.length > 0) ? carriages.map((list, index) =>
               <div className='row innerrow'>
                 <div className="col-sm-6 subcolumn" key="data">
-                  <input name="carriageval" value={list.id} onclick="" type="radio" />
+                  <input name="carriageval" value={list.id} type="radio" />
                   <span>{list.name}</span>
 
                 </div>
