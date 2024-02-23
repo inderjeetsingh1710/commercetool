@@ -2,76 +2,128 @@ import React, { useEffect, useState, useContext } from "react";
 import { CartContext } from '../context/cart'
 import axios from "axios";
 import "./../css/custom.css";
+import * as yup from 'yup' // importing functions from yup library
 
 const currency = process.env.REACT_APP_CURRENCY;
 const currencySymbol = process.env.REACT_APP_CURRENCY_SYMBOL;
 
-function ValidateAddressForm(){
+function ValidateAddressForm() {
   console.log('Form Validation');
 }
 
-function ShippingForm(){
+function ShippingForm() {
 
   const [firstName, setFirstName] = useState('') // useState to store First Name
   const [lastName, setLastName] = useState('') // useState to store Last Name
   const [mobile, setMobile] = useState('') // useState to store Mobile Number 
   const [email, setEmail] = useState('') // useState to store Email address of the user
+  const [error, setError] = useState('')
+  // function ValidateAddressForm() {
+  //   // Check if the First Name is an Empty string or not.
+  //   if (firstName.length == 0) {
+  //     alert('Invalid Form, First Name can not be empty')
+  //     return
+  //   }
 
-  function ValidateAddressForm() {
-    // Check if the First Name is an Empty string or not.
-    if (firstName.length == 0) {
-      alert('Invalid Form, First Name can not be empty')
-      return
+  //   // Check if the Email is an Empty string or not.
+  //   if (email.length == 0) {
+  //     alert('Invalid Form, Email Address can not be empty')
+  //     return
+  //   }
+
+  //   alert('Form is valid')
+  // }
+
+  const userSchema = yup.object().shape({
+    firstName: yup.string().required(),
+    lastName: yup.string().required(),
+    email: yup.string().email().required(),
+    mobile: yup.string(),
+  })
+
+  async function validateForm() {
+    // creating a form data object
+
+    let dataObject = {
+      firstName: firstName,
+      lastName: lastName,
+      email: email,
+      mobile: mobile,
     }
 
-    // Check if the Email is an Empty string or not.
-    if (email.length == 0) {
-      alert('Invalid Form, Email Address can not be empty')
-      return
+    // const validationResult = await userSchema
+    //   .validate(dataObject, { abortEarly: false })
+    //   .catch((err) => {
+    //     const newError = {};
+    //     err.inner.forEach(err => {
+    //       console.log('inner error coming' + err.path);
+    //       newError[err.path] = err.message;
+    //       setError(newError);
+    //     });
+    //   });
+
+    try {
+      const validationResult = await userSchema
+        .validate(dataObject, { abortEarly: false })
+      setError('');
     }
-    
-    alert('Form is valid')
+    catch (err) {
+      const newError = {};
+      err.inner.forEach(err => {
+        console.log('inner error coming' + err.path);
+        newError[err.path] = err.message;
+        setError(newError);
+        console.log(error);
+      })
+    }
+
+
+
   }
 
-  return(
-        <div className='form-container'>
-          <h3 className='form-title'>Set Shipping Address</h3> 
-          <form className='shippingform'>      
-            <div className='row form-row'>
-              <div className='col-md-6'>
-                  <label>First Name</label>
-                  <input type="text" name="firstName" id="firstName" className='form-control'  onChange={(e) => setFirstName(e.target.value)} />
-              </div>
-              <div className='col-md-6'>
-                  <label>Last Name</label>
-                  <input type="text" name="lastName" id="lastName" className='form-control' onChange={(e) => setLastName(e.target.value)} />
-              </div>
-            </div>
-            <div className='row form-row'>
-              <div className='col-md-6'>
-                  <label>Country</label>
-                  <select name='country' className='form-control'>
-                    <option value="DE">Germany</option>
-                  </select>
-              </div>
-              <div className='col-md-6'>
-                  <label>Mobile</label>
-                  <input type="text" name="mobile" className='form-control' onChange={(e) => setMobile(e.target.value)} />
-              </div>
-            </div>         
-            <div className='row form-row'>
-              <div className='col-md-6'>
-                  <label>Email</label>
-                  <input type="text" name="email" className='form-control' onChange={(e) => setEmail(e.target.value)} />
-              </div>       
-            </div>         
-            <div className='row form-row'>
-              <div className='col-md-6'>
-                  <button type='button' className='btn btn-success' onClick = {() => { ValidateAddressForm() }}>Set Shipping Address</button>
-              </div>       
-            </div>         
-          </form>
+  return (
+    <div className='form-container'>
+      <h3 className='form-title'>Set Shipping Address</h3>
+      <form className='shippingform'>
+        <div className='row form-row'>
+          <div className='col-md-6'>
+            <label>First Name</label>
+            <input type="text" name="firstName" id="firstName" className='form-control' onChange={(e) => setFirstName(e.target.value)} />
+            {error.firstName && <div className="error">{error.firstName}</div>}
+          </div>
+          <div className='col-md-6'>
+            <label>Last Name</label>
+            <input type="text" name="lastName" id="lastName" className='form-control' onChange={(e) => setLastName(e.target.value)} />
+            {error.lastName && <div className="error">{error.lastName}</div>}
+          </div>
         </div>
+        <div className='row form-row'>
+          <div className='col-md-6'>
+            <label>Country</label>
+            <select name='country' className='form-control'>
+              <option value="DE">Germany</option>
+            </select>
+          </div>
+          <div className='col-md-6'>
+            <label>Mobile</label>
+            <input type="text" name="mobile" className='form-control' onChange={(e) => setMobile(e.target.value)} />
+            {error.mobile && <div className="error">{error.mobile}</div>}
+          </div>
+        </div>
+        <div className='row form-row'>
+          <div className='col-md-6'>
+            <label>Email</label>
+            <input type="text" name="email" className='form-control' onChange={(e) => setEmail(e.target.value)} />
+            {error.email && <div className="error">{error.email}</div>}
+          </div>
+        </div>
+        <div className='row form-row'>
+          <div className='col-md-6'>
+            <button type='button' className='btn btn-success' onClick={() => { validateForm() }}>Set Shipping Address</button>
+          </div>
+        </div>
+      </form>
+    </div>
   );
 }
 
@@ -79,7 +131,7 @@ function Checkout() {
   const { cartItems, addToCart, removeFromCart, clearCart, getCartTotal } = useContext(CartContext);
   const token = localStorage.getItem('ecomm_token');
 
-  function getcarriages() {    
+  function getcarriages() {
     let cartId = localStorage.getItem('ecomm_cart_id');
     const headers = {
       'Authorization': 'Bearer ' + token,
@@ -104,7 +156,7 @@ function Checkout() {
   }
   const carriages = JSON.parse(localStorage.getItem('carriages'));
 
- 
+
   function Rendercarriages() {
     return (
       <div className='carr'>
@@ -161,13 +213,13 @@ function Checkout() {
   }
   getcarriages();
   //rendercarriages();
-  return (    
-        <div className="container">
-          <div className="page-container"><h1 className="page-title">Checkout</h1></div>
-          <ShippingForm />
-          {(carriages != null) ? <Rendercarriages /> : ''}
-          
-        </div>     
+  return (
+    <div className="container">
+      <div className="page-container"><h1 className="page-title">Checkout</h1></div>
+      <ShippingForm />
+      {(carriages != null) ? <Rendercarriages /> : ''}
+
+    </div>
   )
 }
 

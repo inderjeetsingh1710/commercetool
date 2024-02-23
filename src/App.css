@@ -412,3 +412,7 @@ ul.navbar-nav.me-auto.mb-2.mb-lg-0 {
   border-width: 1px;
   border-color: #565a56;
 }
+
+.error{
+  color: red;
+}
