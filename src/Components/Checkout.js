@@ -7,10 +7,6 @@ import * as yup from 'yup' // importing functions from yup library
 const currency = process.env.REACT_APP_CURRENCY;
 const currencySymbol = process.env.REACT_APP_CURRENCY_SYMBOL;
 
-function ValidateAddressForm() {
-  console.log('Form Validation');
-}
-
 function ShippingForm() {
 
   const [firstName, setFirstName] = useState('') // useState to store First Name
@@ -18,22 +14,19 @@ function ShippingForm() {
   const [mobile, setMobile] = useState('') // useState to store Mobile Number 
   const [email, setEmail] = useState('') // useState to store Email address of the user
   const [error, setError] = useState('')
-  // function ValidateAddressForm() {
-  //   // Check if the First Name is an Empty string or not.
-  //   if (firstName.length == 0) {
-  //     alert('Invalid Form, First Name can not be empty')
-  //     return
-  //   }
-
-  //   // Check if the Email is an Empty string or not.
-  //   if (email.length == 0) {
-  //     alert('Invalid Form, Email Address can not be empty')
-  //     return
-  //   }
-
-  //   alert('Form is valid')
-  // }
-
+  /*function ValidateAddressForm() {
+    // Check if the First Name is an Empty string or not.
+    if (firstName.length == 0) {
+      alert('Invalid Form, First Name can not be empty')
+      return
+    }
+    // Check if the Email is an Empty string or not.
+    if (email.length == 0) {
+      alert('Invalid Form, Email Address can not be empty')
+      return
+    }
+    alert('Form is valid')
+  }*/
   const userSchema = yup.object().shape({
     firstName: yup.string().required(),
     lastName: yup.string().required(),
@@ -42,30 +35,18 @@ function ShippingForm() {
   })
 
   async function validateForm() {
-    // creating a form data object
-
+    //creating a form data object
     let dataObject = {
       firstName: firstName,
       lastName: lastName,
       email: email,
       mobile: mobile,
-    }
-
-    // const validationResult = await userSchema
-    //   .validate(dataObject, { abortEarly: false })
-    //   .catch((err) => {
-    //     const newError = {};
-    //     err.inner.forEach(err => {
-    //       console.log('inner error coming' + err.path);
-    //       newError[err.path] = err.message;
-    //       setError(newError);
-    //     });
-    //   });
+    }  
 
     try {
-      const validationResult = await userSchema
-        .validate(dataObject, { abortEarly: false })
+      const validationResult = await userSchema.validate(dataObject, { abortEarly: false })
       setError('');
+      
     }
     catch (err) {
       const newError = {};
@@ -76,9 +57,6 @@ function ShippingForm() {
         console.log(error);
       })
     }
-
-
-
   }
 
   return (
