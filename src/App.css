@@ -373,6 +373,13 @@ ul.navbar-nav.me-auto.mb-2.mb-lg-0 {
   border-radius: 3px;
   margin-bottom: 20px;
 }
+
+.carr{
+  padding: 0px  0px 30px  0px;
+  margin-bottom: 20px;
+  border: 1px solid #ddd;
+}
+
 .shippingform .form-row label{font-weight:bold}
 .form-container .form-title{padding-bottom:20px;}
 .shippingform .form-row{padding-bottom: 20px;}
@@ -393,7 +400,7 @@ ul.navbar-nav.me-auto.mb-2.mb-lg-0 {
 
 .checkout.delivery-option  {
   
-  background: #f0f0f0;
+  /* background: #f0f0f0; */
  
 }
 .subcloumn{
@@ -406,12 +413,7 @@ ul.navbar-nav.me-auto.mb-2.mb-lg-0 {
 
   margin: 20px;
 }
-.carr{
-  border-radius: 3px;
-  border-style:solid;
-  border-width: 1px;
-  border-color: #565a56;
-}
+
 
 .error{
   color: red;
