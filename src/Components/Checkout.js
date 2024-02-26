@@ -34,6 +34,51 @@ function ShippingForm() {
     mobile: yup.string(),
   })
 
+  async function submitShippingAddress() {
+    console.log('reached here');
+    const token = localStorage.getItem('ecomm_token');
+    let cartId = localStorage.getItem('ecomm_cart_id');
+    const cartVersion = localStorage.getItem('ecomm_cart_version');
+    console.log(cartVersion);
+    const headers = {
+      'Authorization': 'Bearer ' + token,
+      'Content-Type': 'application/json'
+    }
+
+    let carriages = localStorage.getItem('carriages');
+
+    const apiUrl = process.env.REACT_APP_ECOMM_API_URL + '/' + process.env.REACT_APP_ECOMM_PROJ_NAME + '/carts/' + cartId;
+
+
+    await axios.request({
+      url: apiUrl,
+      method: 'post',
+      data: {
+        version: parseInt(cartVersion),
+        actions: [
+          {
+            action: "setShippingAddress",
+            address: {
+              salutation: "Mr.",
+              firstName: "Example",
+              lastName: "try",
+              country: "DE",
+              mobile: "+49 171 2345678",
+              email: "email@example.com"
+            }
+          }
+        ]
+      },
+      headers: headers
+    }).then(function (response) {
+      localStorage.setItem('ecomm_cart_version', response.data.version);
+      var x = document.getElementById("shipping_button");
+      x.style.display = "none";
+
+    });
+
+  }
+
   async function validateForm() {
     //creating a form data object
     let dataObject = {
@@ -41,12 +86,13 @@ function ShippingForm() {
       lastName: lastName,
       email: email,
       mobile: mobile,
-    }  
+    }
 
     try {
       const validationResult = await userSchema.validate(dataObject, { abortEarly: false })
       setError('');
-      
+      submitShippingAddress();
+
     }
     catch (err) {
       const newError = {};
@@ -97,7 +143,7 @@ function ShippingForm() {
         </div>
         <div className='row form-row'>
           <div className='col-md-6'>
-            <button type='button' className='btn btn-success' onClick={() => { validateForm() }}>Set Shipping Address</button>
+            <button id="shipping_button" type='button' className='btn btn-success' onClick={() => { validateForm() }}>Set Shipping Address</button>
           </div>
         </div>
       </form>
