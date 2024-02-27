@@ -45,6 +45,41 @@ async function submitShippingMethod(target) {
 
 }
 
+function PaymentForm() {
+
+  return (
+    <div className='form-container'>
+      <h3 className='form-title'>Payment methods</h3>
+      <form className='paymentform'>
+        <div className='row form-row'>
+          <div className='col-md-12'>
+            <label>Card Number</label>
+            <input type="text" name="cardNumber" id="cardNumber" className='form-control' />
+          </div>
+        </div>
+        <div className='row form-row'>
+          <div className='col-md-6'>
+            <label>Expiry Date</label>
+            <input type="text" name="expDate" id="expDate" className='form-control' />
+          </div>
+          <div className='col-md-6'>
+            <label>Security Code</label>
+            <input type="text" name="secCode" id="secCode" className='form-control' />
+          </div>
+        </div>
+
+        <div className='row form-row place-order-row'>
+          <div className='col-md-12'>
+            <button id="payment_button" type='button' className='btn btn-success'>Place Order</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  );
+
+}
+
+
 function ShippingForm() {
 
   const [firstName, setFirstName] = useState('') // useState to store First Name
@@ -301,6 +336,7 @@ function Checkout() {
       <div className="page-container"><h1 className="page-title">Checkout</h1></div>
       <ShippingForm />
       <Rendercarriages />
+      <PaymentForm />
 
     </div>
   )
