@@ -180,29 +180,9 @@ function Checkout() {
   const token = localStorage.getItem('ecomm_token');
 
   function getcarriages() {
-    let cartId = localStorage.getItem('ecomm_cart_id');
-    const headers = {
-      'Authorization': 'Bearer ' + token,
-      'Content-Type': 'application/json'
-    }
 
-    let carriages = localStorage.getItem('carriages');
-    if (carriages == '' || carriages == null) {
-      const apiUrl = process.env.REACT_APP_ECOMM_API_URL + '/' + process.env.REACT_APP_ECOMM_PROJ_NAME + '/shipping-methods';
-      axios.request({
-        url: apiUrl,
-        method: 'get',
-        data: {
-          currency: currency
-        },
-        headers: headers
-      }).then(function (response) {
-        console.log('checkout is' + JSON.stringify(response.data));
-        localStorage.setItem('carriages', JSON.stringify(response.data.results));
-      });
-    }
   }
-  const carriages = JSON.parse(localStorage.getItem('carriages'));
+  // const carriages = JSON.parse(localStorage.getItem('carriages'));
 
 
   function Rendercarriages() {
@@ -245,6 +225,38 @@ function Checkout() {
 
       });
     }
+    const [carriages, setCarriage] = useState('');
+    function getcarriages() {
+
+      let cartId = localStorage.getItem('ecomm_cart_id');
+      const headers = {
+        'Authorization': 'Bearer ' + token,
+        'Content-Type': 'application/json'
+      }
+
+      let carriageslocal = localStorage.getItem('carriages');
+      if (carriageslocal == '' || carriageslocal == null) {
+        console.log('reached here ');
+        const apiUrl = process.env.REACT_APP_ECOMM_API_URL + '/' + process.env.REACT_APP_ECOMM_PROJ_NAME + '/shipping-methods';
+        axios.request({
+          url: apiUrl,
+          method: 'get',
+          data: {
+            currency: currency
+          },
+          headers: headers
+        }).then(function (response) {
+
+          setCarriage(response.data.results);
+          localStorage.setItem('carriageslocal', JSON.stringify(response.data.results));
+        });
+      }
+    }
+
+    useEffect(() => {
+      getcarriages();
+    }, []);
+    console.log('length is ' + carriages);
     return (
       <div className='carr'>
         <section className="checkout delivery-option">
@@ -288,7 +300,7 @@ function Checkout() {
     <div className="container">
       <div className="page-container"><h1 className="page-title">Checkout</h1></div>
       <ShippingForm />
-      {(carriages != null) ? <Rendercarriages /> : ''}
+      <Rendercarriages />
 
     </div>
   )
