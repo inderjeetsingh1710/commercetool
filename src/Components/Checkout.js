@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import { CartContext } from '../context/cart'
 import axios from "axios";
 import "./../css/custom.css";
-import * as yup from 'yup' // importing functions from yup library
+import * as yup from 'yup'; 
 
 const currency = process.env.REACT_APP_CURRENCY;
 const currencySymbol = process.env.REACT_APP_CURRENCY_SYMBOL;
@@ -47,6 +47,92 @@ async function submitShippingMethod(target) {
 
 function PaymentForm() {
 
+  const token = localStorage.getItem('ecomm_token');
+  let cartId = localStorage.getItem('ecomm_cart_id');
+  const cartVersion = localStorage.getItem('ecomm_cart_version');
+
+  const [cardNumber, setCardNumber] = useState('');
+  const [expDate, setExpDate] = useState('');
+  const [secCode, setSecCode] = useState('');
+  const [errorp, setPaymentFormError] = useState('')
+
+  const cardSchema = yup.object().shape({
+    cardNumber: yup.string().label('Card number').max(16).required(),
+    expDate: yup.string().label('Expiry Date').required(),
+    secCode: yup.string().label('CVV').min(3).max(4).required()    
+  })
+
+  async function validatePaymentForm() {
+   
+    let dataObject = {
+      cardNumber: cardNumber,
+      expDate: expDate,
+      secCode: secCode
+    }
+    let paymentID = '';
+    try {
+      const validationResult = await cardSchema.validate(dataObject, { abortEarly: false })
+      setPaymentFormError('');  
+      console.log('dataObject: '+dataObject); 
+      let date = new Date(); 
+      let timestamp = date.getTime(); 
+
+      let paymentData = {
+        'key': "testkey",
+        'interfaceId': "I7899999",
+        'amountPlanned': {
+          "currencyCode" : "USD",
+          "centAmount" : 7833
+        },
+        "paymentMethodInfo" : {
+          "paymentInterface" : "STRIPE",
+          "method" : "CREDIT_CARD",
+          "name" : {
+            "en" : "Credit Card"
+          }
+        },
+        "transactions" : [ {
+          "timestamp" : "2024-02-27T08:54:24.000Z",
+          "type" : "Charge",
+          "amount" : {
+            "currencyCode" : "USD",
+            "centAmount" : 7833
+          },
+          "state" : "Pending"
+        }]
+      }
+
+      const headers = {
+        'Authorization': 'Bearer ' + token,
+        'Content-Type': 'application/json'
+      }
+
+      const apiUrl = process.env.REACT_APP_ECOMM_API_URL + '/' + process.env.REACT_APP_ECOMM_PROJ_NAME + '/payments';
+      await axios.request({
+        url: apiUrl,
+        method: 'post',
+        data: paymentData,
+        headers: headers
+      }).then(function (response) {
+        console.log('payment Created: ' + JSON.stringify(response.data));
+        paymentID = response.data.id;
+        console(response.data.id);       
+      });
+
+
+    }
+    catch (err) {
+      const newError = {};
+      err.inner.forEach(err => {
+        console.log('inner error coming' + err.path);
+        newError[err.path] = err.message;
+        setPaymentFormError(newError);
+        console.log(errorp);
+      })
+    }
+  }
+  
+
   return (
     <div className='form-container'>
       <h3 className='form-title'>Payment methods</h3>
@@ -54,23 +140,26 @@ function PaymentForm() {
         <div className='row form-row'>
           <div className='col-md-12'>
             <label>Card Number</label>
-            <input type="text" name="cardNumber" id="cardNumber" className='form-control' />
+            <input type="text" name="cardNumber" id="cardNumber" className='form-control' onChange={(e) => setCardNumber(e.target.value)} />
+            {errorp.cardNumber && <div className="error">{errorp.cardNumber}</div>}
           </div>
         </div>
         <div className='row form-row'>
           <div className='col-md-6'>
             <label>Expiry Date</label>
-            <input type="text" name="expDate" id="expDate" className='form-control' />
+            <input type="text" name="expDate" id="expDate" className='form-control' onChange={(e) => setExpDate(e.target.value)}  />
+            {errorp.expDate && <div className="error">{errorp.expDate}</div>}
           </div>
           <div className='col-md-6'>
             <label>Security Code</label>
-            <input type="text" name="secCode" id="secCode" className='form-control' />
+            <input type="text" name="secCode" id="secCode" className='form-control' onChange={(e) => setSecCode(e.target.value)}  />
+            {errorp.secCode && <div className="error">{errorp.secCode}</div>}
           </div>
         </div>
 
         <div className='row form-row place-order-row'>
           <div className='col-md-12'>
-            <button id="payment_button" type='button' className='btn btn-success'>Place Order</button>
+            <button id="payment_button" type='button' className='btn btn-success' onClick={() => { validatePaymentForm() }}>Place Order</button>
           </div>
         </div>
       </form>
