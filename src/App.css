@@ -385,7 +385,16 @@ ul.navbar-nav.me-auto.mb-2.mb-lg-0 {
 .shippingform .form-row, .paymentform .form-row{padding-bottom: 20px;}
 .carriage-desc{display: block;font-size: 14px;color: #7c7c7c;}
 .place-order-row{text-align: right;padding-top: 30px;}
-
+.order-confirm-icons{font-size: 60px; text-align: center;color: #488244;}
+.order-confirmation-box {
+  padding: 60px 0px;
+  text-align: center;
+  border: 2px solid #488244;
+  border-radius: 3px;
+  margin: 65px 0px;
+}
+.order-info{padding-top: 20px;}
+.order-confirmation-page .page-title{text-align: center;}
 .checkout .header {
 
   width: 100%;

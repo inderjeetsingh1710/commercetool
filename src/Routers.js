@@ -19,6 +19,7 @@ import ProductDetail from './Components/ProductDetail';
 import Cart from './Components/Cart';
 import ErrorPage from './Components/ErrorPage';
 import Checkout from './Components/Checkout';
+import OrderConfirmation from './Components/OrderConfirmation';
 
 function Routers() {
   let { userId } = useParams();
@@ -38,6 +39,7 @@ function Routers() {
         <Route exact path="/category/:paramId" element={<CategoryDetail />} />
         <Route path="/product/:id" element={<ProductDetail />} />
         <Route path="/checkout" element={<Checkout />} />
+        <Route path="/order-confirmation" element={<OrderConfirmation />} />
 
         <Route path="*" element={<ErrorPage />} />
       </Routes>

@@ -6,18 +6,17 @@ import * as yup from 'yup';
 
 const currency = process.env.REACT_APP_CURRENCY;
 const currencySymbol = process.env.REACT_APP_CURRENCY_SYMBOL;
+const cartId = localStorage.getItem('ecomm_cart_id');
+const token = localStorage.getItem('ecomm_token'); 
+let carriageprice = '';
 
-
-async function submitShippingMethod(target) {
-
-  const token = localStorage.getItem('ecomm_token');
-  let cartId = localStorage.getItem('ecomm_cart_id');
-  const cartVersion = localStorage.getItem('ecomm_cart_version');
+async function submitShippingMethod(target,cprice) {  
+  let cartVersion = localStorage.getItem('ecomm_cart_version');
+  carriageprice = cprice;  
   const headers = {
     'Authorization': 'Bearer ' + token,
     'Content-Type': 'application/json'
   }
-
   let carriages = localStorage.getItem('carriages');
   // let shippingid =
   const apiUrl = process.env.REACT_APP_ECOMM_API_URL + '/' + process.env.REACT_APP_ECOMM_PROJ_NAME + '/carts/' + cartId;
@@ -45,12 +44,23 @@ async function submitShippingMethod(target) {
 
 }
 
-function PaymentForm() {
 
-  const token = localStorage.getItem('ecomm_token');
-  let cartId = localStorage.getItem('ecomm_cart_id');
+
+function generateRondamKey(length) {
+  let result = '';
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  const charactersLength = characters.length;
+  let counter = 0;
+  while (counter < length) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    counter += 1;
+  }
+  return result;
+}
+
+function PaymentForm() {  
+  const { cartItems, addToCart, removeFromCart, clearCart, getCartTotal } = useContext(CartContext);
   const cartVersion = localStorage.getItem('ecomm_cart_version');
-
   const [cardNumber, setCardNumber] = useState('');
   const [expDate, setExpDate] = useState('');
   const [secCode, setSecCode] = useState('');
@@ -72,17 +82,23 @@ function PaymentForm() {
     let paymentID = '';
     try {
       const validationResult = await cardSchema.validate(dataObject, { abortEarly: false })
-      setPaymentFormError('');  
-      console.log('dataObject: '+dataObject); 
-      let date = new Date(); 
-      let timestamp = date.getTime(); 
+      setPaymentFormError('');    
+      const date = new Date();
+      let transactionsDateTime = date.toISOString();
+      let paymentKey = generateRondamKey(8);
+      let interfaceId = 'I'+generateRondamKey(9);
+      let cartTotal = getCartTotal()*100;
+      cartTotal = cartTotal + carriageprice;
+      console.log('paymentKey: '+paymentKey);
+      console.log('interfaceId: '+interfaceId);
+      console.log('Cart Total: '+cartTotal);
 
       let paymentData = {
-        'key': "testkey",
-        'interfaceId': "I7899999",
+        'key': paymentKey,
+        'interfaceId': interfaceId,
         'amountPlanned': {
-          "currencyCode" : "USD",
-          "centAmount" : 7833
+          "currencyCode" : currency,
+          "centAmount" : cartTotal
         },
         "paymentMethodInfo" : {
           "paymentInterface" : "STRIPE",
@@ -92,13 +108,13 @@ function PaymentForm() {
           }
         },
         "transactions" : [ {
-          "timestamp" : "2024-02-27T08:54:24.000Z",
+          "timestamp" : transactionsDateTime,
           "type" : "Charge",
           "amount" : {
-            "currencyCode" : "USD",
-            "centAmount" : 7833
+            "currencyCode" : currency,
+            "centAmount" : cartTotal
           },
-          "state" : "Pending"
+          "state" : "Success"
         }]
       }
 
@@ -114,12 +130,11 @@ function PaymentForm() {
         data: paymentData,
         headers: headers
       }).then(function (response) {
-        console.log('payment Created: ' + JSON.stringify(response.data));
-        paymentID = response.data.id;
-        console(response.data.id);       
+          console.log('payment Created: ' + JSON.stringify(response.data));
+          paymentID = response.data.id;
+          console.log(response.data.id);
+          addPaymentToCart(paymentID);
       });
-
-
     }
     catch (err) {
       const newError = {};
@@ -131,7 +146,65 @@ function PaymentForm() {
       })
     }
   }
+
+  async function addPaymentToCart(paymentID){
+      let cartVersion = localStorage.getItem('ecomm_cart_version');
+      const headers = {
+        'Authorization': 'Bearer ' + token,
+        'Content-Type': 'application/json'
+      }
+      const addPaymentApiUrl = process.env.REACT_APP_ECOMM_API_URL + '/' + process.env.REACT_APP_ECOMM_PROJ_NAME + '/carts/'+cartId;
+      await axios.request({
+        url: addPaymentApiUrl,
+        method: 'post',
+        data: {
+          "version": parseInt(cartVersion),
+          "actions": [
+              {
+                  "action" : "addPayment",
+                  "payment" : {
+                    "id" : paymentID,
+                    "typeId" : "payment"
+                  }
+                }
+          ]
+      },
+      headers: headers
+      }).then(function (response) {
+          console.log('payment Added: ' + JSON.stringify(response.data));
+          let cartVersion = response.data.version;         
+          localStorage.setItem('ecomm_cart_version', cartVersion);  
+          createOrder();               
+      });
+  }
   
+  async function createOrder(){
+    let cartVersion = localStorage.getItem('ecomm_cart_version');
+      const headers = {
+        'Authorization': 'Bearer ' + token,
+        'Content-Type': 'application/json'
+      }
+      const addPaymentApiUrl = process.env.REACT_APP_ECOMM_API_URL + '/' + process.env.REACT_APP_ECOMM_PROJ_NAME + '/orders/';
+      await axios.request({
+        url: addPaymentApiUrl,
+        method: 'post',
+        data: {
+          "cart" : {
+            "id" : cartId,
+            "typeId" : "cart"
+          },
+          "version" : parseInt(cartVersion)
+        },
+      headers: headers
+      }).then(function (response) {
+          console.log('Order Created: ' + JSON.stringify(response.data));                 
+          localStorage.setItem('ecomm_order_data', JSON.stringify(response.data));
+          localStorage.removeItem("cartItems");                 
+          localStorage.removeItem("ecomm_cart_id");              
+          localStorage.removeItem("ecomm_cart_version");
+          window.location.replace('/order-confirmation');              
+      });
+  }
 
   return (
     <div className='form-container'>
@@ -184,6 +257,32 @@ function ShippingForm() {
     mobile: yup.string(),
   })
 
+  async function setCustomerEmail(){
+    let cartVersion = localStorage.getItem('ecomm_cart_version');
+    const apiUrl = process.env.REACT_APP_ECOMM_API_URL + '/' + process.env.REACT_APP_ECOMM_PROJ_NAME + '/carts/' + cartId;
+    const headers = {
+      'Authorization': 'Bearer ' + token,
+      'Content-Type': 'application/json'
+    }
+    await axios.request({
+      url: apiUrl,
+      method: 'post',
+      data: {
+        version: parseInt(cartVersion),
+        actions: [
+          {
+            action: "setCustomerEmail",
+            "email" : email
+          }
+        ]
+      },
+      headers: headers
+    }).then(function (response) {
+      console.log('Customer Email Setup: ' + JSON.stringify(response.data));
+      localStorage.setItem('ecomm_cart_version', response.data.version);
+    });  
+  }
+
   async function submitShippingAddress() {
 
     const token = localStorage.getItem('ecomm_token');
@@ -207,11 +306,11 @@ function ShippingForm() {
             action: "setShippingAddress",
             address: {
               salutation: "Mr.",
-              firstName: "Example",
-              lastName: "try",
+              firstName: firstName,
+              lastName: lastName,
               country: "DE",
-              mobile: "+49 171 2345678",
-              email: "email@example.com"
+              mobile: mobile,
+              email: email
             }
           }
         ]
@@ -219,6 +318,7 @@ function ShippingForm() {
       headers: headers
     }).then(function (response) {
       localStorage.setItem('ecomm_cart_version', response.data.version);
+      setCustomerEmail();
       var x = document.getElementById("shipping_button");
       x.style.display = "none";
 
@@ -239,8 +339,7 @@ function ShippingForm() {
     try {
       const validationResult = await userSchema.validate(dataObject, { abortEarly: false })
       setError('');
-      submitShippingAddress();
-
+      submitShippingAddress();      
     }
     catch (err) {
       const newError = {};
@@ -300,7 +399,7 @@ function ShippingForm() {
 }
 
 function Checkout() {
-  const { cartItems, addToCart, removeFromCart, clearCart, getCartTotal } = useContext(CartContext);
+  
   const token = localStorage.getItem('ecomm_token');
 
   function getcarriages() {
@@ -401,14 +500,14 @@ function Checkout() {
           {(carriages.length > 0) ? carriages.map((list, index) =>
             <div className='row innerrow'>
               <div className="col-sm-6 subcolumn" key="data">
-                <input name="carriageval" value={list.id} type="radio" id="option1" onChange={(e) => submitShippingMethod(e.target.value)} />
+                <input name="carriageval" value={list.id} type="radio" id="option1" data-carriageprice={((list.zoneRates)[0].shippingRates)[0].price.centAmount/100} onChange={(e) => submitShippingMethod(e.target.value,((list.zoneRates)[0].shippingRates)[0].price.centAmount)} />
                 <span>{list.name}</span>
               </div>
               <div className="col-sm-4 subcolumn">
                 <span>{list.localizedDescription.en}</span>
               </div>
               <div className="col-sm-2 subcolumn">
-                {list.zoneRates.length > 0 ? <span> {currencySymbol}{((list.zoneRates)[0].shippingRates)[0].price.centAmount}</span>
+                {list.zoneRates.length > 0 ? <span> {currencySymbol}{(((list.zoneRates)[0].shippingRates)[0].price.centAmount/100).toFixed(2)}</span>
                   : ''}
               </div>
             </div>

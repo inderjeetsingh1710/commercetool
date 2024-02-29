@@ -14,12 +14,12 @@ function Token() {
   const [login, setLogin] = useState([]);
   const [userName, createUser] = useState('');
   const postData = {
-    username: 'xFAvcurovwyUtd5l-0OqKLVO',
-    password: 'Nh0xgihKwYbqayKHcRfYlgTU-aUy29My',
+    username: process.env.REACT_APP_ECOMM_API_USERNAME,
+    password: process.env.REACT_APP_ECOMM_API_PWD,
     // expiresInMins: 60, // optional
   }
   const headres = {
-    'Authorization': 'Basic eEZBdmN1cm92d3lVdGQ1bC0wT3FLTFZPOk5oMHhnaWhLd1licWF5S0hjUmZZbGdUVS1hVXkyOU15'
+    'Authorization': 'Basic '+process.env.REACT_APP_ECOMM_BASIC_AUTH
   };
   try {
     let token = localStorage.getItem('ecomm_token');
@@ -32,8 +32,8 @@ function Token() {
       if (get_token_date != todayDate || token == '') {
 
         localStorage.setItem('ecomm_token', '');
-        await axios.request({
-          url: 'https://auth.eu-central-1.aws.commercetools.com/oauth/token?grant_type=client_credentials',
+        await axios.request({          
+          url: process.env.REACT_APP_API_AUTH_URL+'/oauth/token?grant_type=client_credentials',
           method: 'post',
           headers: headres,
           data: postData
