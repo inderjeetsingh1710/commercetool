@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom';
 import { Link } from "react-router-dom";
 
 const sleep = ms =>  new Promise(resolve => setTimeout(resolve, ms));
+const lang = process.env.REACT_APP_LANG_PROD;
 
 function ShopProduct(){
     const { cartItems, addToCart } = useContext(CartContext)
@@ -46,13 +47,13 @@ function ShopProduct(){
                 { (myProductList.length > 0) ? myProductList.map((prolist) => <div className="col-md-3" key={prolist.id}>                
                     <div className="inner-product"> 
                         <div className="pro-img">
-                        <Link to={`/product/${prolist.id}`}><img src={prolist.masterData.current.masterVariant?.images[0].url} alt={prolist.masterData.current.name.en} /></Link>
+                        <Link to={`/product/${prolist.id}`}><img src={prolist.masterData.current.masterVariant?.images[0].url} alt={prolist.masterData.current.name[lang]} /></Link>
                         </div>                  
                         <div className="inner-cat-info">                           
-                            <Link to={`/product/${prolist.id}`}><h3 className='prod-title'>{prolist.masterData.current.name.en}</h3></Link>
+                            <Link to={`/product/${prolist.id}`}><h3 className='prod-title'>{prolist.masterData.current.name[lang]}</h3></Link>
                             <div className="price-container">{(prolist.masterData.current.masterVariant.prices[0].value.centAmount / 100).toLocaleString("en-US", {style:"currency", currency:currency})}</div>                          
                             <div className="btn-container">
-                                <a href="#" className="addToCart cart-btn btn btn-success" data-id={prolist.id} onClick={() => addToCart({'id':prolist.id,'title':prolist.masterData.current.name.en,'price': (prolist.masterData.current.masterVariant.prices[0].value.centAmount / 100).toFixed(2) ,'thumbnail':prolist.masterData.current.masterVariant.images[0].url})} ><i className="bi bi-bag"></i> Add to Cart</a>
+                                <a href="#" className="addToCart cart-btn btn btn-success" data-id={prolist.id} onClick={() => addToCart({'id':prolist.id,'title':prolist.masterData.current.name[lang],'price': (prolist.masterData.current.masterVariant.prices[0].value.centAmount / 100).toFixed(2) ,'thumbnail':prolist.masterData.current.masterVariant.images[0].url})} ><i className="bi bi-bag"></i> Add to Cart</a>
                             </div>
                         </div>
                     </div>
@@ -101,7 +102,7 @@ function Shop() {
             let listItems = [];          
             response.data.results.map((category,index) => {          
                 if(category.ancestors.length === 0){
-                    let cat = {'id':category.id, 'cname':  category.name.en,'subcat':[]};                   
+                    let cat = {'id':category.id, 'cname':  category.name[lang],'subcat':[]};                   
                     catList.push(cat); //Main Categories
                     mainCats.push(category.id);
                 }                
@@ -112,7 +113,7 @@ function Shop() {
                     let listItem = '';                 
                     category.ancestors.map((parent,index) => {
                         if(mainCats.includes(parent.id)){
-                            let subcatD = {'id':category.id, 'cname':  category.name.en};
+                            let subcatD = {'id':category.id, 'cname':  category.name[lang]};
                             catList.map((item,indexValue) => {
                                 if(item.id == parent.id){
                                     catList[indexValue].subcat.push(subcatD);

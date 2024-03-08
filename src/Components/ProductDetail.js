@@ -5,6 +5,7 @@ import {getCurrencySymbol} from "./Common/Helper.js";
 import { CartContext } from '../context/cart.js'
 import React, { useEffect, useState, useContext } from 'react';
 
+const lang = process.env.REACT_APP_LANG_PROD;
 function ProductDetail() {
   const { cartItems, addToCart } = useContext(CartContext)
   const [product, setProduct] = useState({});
@@ -18,8 +19,8 @@ function ProductDetail() {
   // const {masterData:{current:{name:{en}}}} =  product;  
   //  console.log(product?.masterData?.current?.name?.en);
   let currentItem = product?.masterData?.current;
-  let itemName = currentItem?.name?.en;
-  let itemDescription = currentItem?.metaDescription?.en;
+  let itemName = currentItem?.name[lang];
+  let itemDescription = currentItem?.description[lang];
   let itemPrices = currentItem?.masterVariant?.prices;
   let itemPrice = itemPrices?.[0]?.value?.centAmount/100;
   let itemCurrencySymbol = getCurrencySymbol(itemPrices?.[0]?.country ?? 'Any', itemPrices?.[0]?.value?.currencyCode ?? 'EUR');

@@ -3,8 +3,7 @@ import axios from "axios";
 import { CartContext } from '../context/cart.js'
 import React, { useEffect, useState, useContext } from "react";
 
-
-
+const lang = process.env.REACT_APP_LANG_PROD;
 
 function MyBanner() {
   return (
@@ -52,7 +51,7 @@ function FeaturedProduct() {
   const fetchProducts = async () => {
     let token = localStorage.getItem('ecomm_token');
     console.log('fetchproducts_home_page', token);
-    let paramId = 'c7cc7bb6-5de4-4100-8b78-a0f69776dbb3';
+    let paramId = process.env.REACT_APP_FEATURED_CAT;
     const headers = {
       'Authorization': 'Bearer ' + token,
       'Content-Type': 'application/json'
@@ -92,13 +91,13 @@ function FeaturedProduct() {
           {(myProductList.length > 0) ? myProductList.map((prolist) => <div className="col-md-3" key={prolist.id}>
             <div className="inner-product">
               <div className="pro-img">
-                <Link to={`/product/${prolist.id}`}><img src={prolist.masterData.current.variants[0].images[0].url} alt={prolist.masterData.current.name.en} /></Link>
+                <Link to={`/product/${prolist.id}`}><img src={prolist.masterData.current.masterVariant.images[0].url} alt={prolist.masterData.current.name.en} /></Link>
               </div>
               <div className="inner-cat-info">
-                <Link to={`/product/${prolist.id}`}><h1>{prolist.masterData.current.name.en}</h1></Link>
+                <Link to={`/product/${prolist.id}`}><h1>{prolist.masterData.current.name[lang]}</h1></Link>
                 {/* { list.masterData.current.masterVariant.prices.map(prices => <p>{prices.value.centAmount}</p>) }                            */}
                 <div className="price-container">{(prolist.masterData.current.masterVariant.prices[0].value.centAmount / 100).toLocaleString("en-US", { style: "currency", currency: currency })}</div>
-                <div className="btn-container"><a href="#" className="addToCart cart-btn btn btn-success" data-id={prolist.id} onClick={() => addToCart({ 'id': prolist.id, 'title': prolist.masterData.current.name.en, 'price': (prolist.masterData.current.masterVariant.prices[0].value.centAmount / 100).toFixed(2), 'thumbnail': prolist.masterData.current.variants[0].images[0].url })}><i className="bi bi-bag"></i> Add to Cart</a></div>
+                <div className="btn-container"><a href="#" className="addToCart cart-btn btn btn-success" data-id={prolist.id} onClick={() => addToCart({ 'id': prolist.id, 'title': prolist.masterData.current.name.lang, 'price': (prolist.masterData.current.masterVariant.prices[0].value.centAmount / 100).toFixed(2), 'thumbnail': prolist.masterData.current.variants[0].images[0].url })}><i className="bi bi-bag"></i> Add to Cart</a></div>
               </div>
             </div>
 
@@ -173,8 +172,8 @@ function Home() {
                     {/* <img src={'/images/'+catImages[index]} alt={index} />                     */}
                   </div>
                   <div className="inner-cat-info">
-                    <h1>{catlist.name.en}</h1>
-                    <p>{catlist.description ? (catlist.description.en) : ('')}</p>
+                    <h1>{catlist.name[lang]}</h1>
+                    <p>{catlist.description ? (catlist.description[lang]) : ('')}</p>
                   </div>
                 </div>
               </Link>
