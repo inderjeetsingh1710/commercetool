@@ -6,6 +6,7 @@ import { CartContext } from '../context/cart.js'
 import React, { useEffect, useState, useContext } from 'react';
 
 const lang = process.env.REACT_APP_LANG_PROD;
+console.log('Language: '+lang);
 function ProductDetail() {
   const { cartItems, addToCart } = useContext(CartContext)
   const [product, setProduct] = useState({});
@@ -20,7 +21,8 @@ function ProductDetail() {
   //  console.log(product?.masterData?.current?.name?.en);
   let currentItem = product?.masterData?.current;
   let itemName = currentItem?.name[lang];
-  let itemDescription = currentItem?.description[lang];
+  //let itemDescription = currentItem?.description[lang];
+  let itemDescription = currentItem?.description? currentItem.description[lang] : '';
   let itemPrices = currentItem?.masterVariant?.prices;
   let itemPrice = itemPrices?.[0]?.value?.centAmount/100;
   let itemCurrencySymbol = getCurrencySymbol(itemPrices?.[0]?.country ?? 'Any', itemPrices?.[0]?.value?.currencyCode ?? 'EUR');
